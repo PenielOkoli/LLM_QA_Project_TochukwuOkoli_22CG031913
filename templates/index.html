@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Q&A System - Tochukwu Okoli</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🤖 LLM Question-Answering System</h1>
+            <p class="subtitle">Computational Science and Numerical Methods Project</p>
+            <p class="author">By: Tochukwu Okoli (22CG031913)</p>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <p><strong>ℹ️ About:</strong> This application uses Google's Gemini AI to answer your questions.</p>
+            <p>Get your free API key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a></p>
+        </div>
+
+        <!-- Alert Messages -->
+        {% if error %}
+        <div class="alert alert-error">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        {% if warning %}
+        <div class="alert alert-warning">
+            ⚠️ {{ warning }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert-success">
+            ✅ {{ success }}
+        </div>
+        {% endif %}
+
+        <!-- Main Form -->
+        <form method="POST" action="/" class="form-section">
+            <div class="form-group">
+                <label for="api_key">🔑 Google Gemini API Key:</label>
+                <input 
+                    type="password" 
+                    id="api_key" 
+                    name="api_key" 
+                    placeholder="Enter your Gemini API key here"
+                    value="{{ api_key or '' }}"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="question">🔍 Your Question:</label>
+                <textarea 
+                    id="question" 
+                    name="question" 
+                    placeholder="What is machine learning?"
+                    required>{{ question or '' }}</textarea>
+            </div>
+
+            <button type="submit" class="btn">Get Answer</button>
+        </form>
+
+        <!-- Results Section -->
+        {% if processed_question %}
+        <div class="results">
+            <!-- Preprocessing Details -->
+            <div class="preprocessing-details">
+                <h3>📝 Preprocessing Details</h3>
+                
+                <div class="detail-row">
+                    <div class="detail-box">
+                        <h4>Original Question</h4>
+                        <p>{{ question }}</p>
+                    </div>
+                    <div class="detail-box">
+                        <h4>Processed Question</h4>
+                        <p>{{ processed_question }}</p>
+                    </div>
+                </div>
+
+                <div class="tokens">
+                    <h4>Tokens</h4>
+                    <div class="token-list">{{ tokens }}</div>
+                </div>
+            </div>
+
+            <!-- Answer Section -->
+            {% if answer %}
+            <div class="answer-section">
+                <h3>💡 Answer</h3>
+                <div class="answer-text">
+                    {{ answer|safe }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>CSC415/CSC331 Project 2 | Covenant University | 2024/2025 Alpha Semester</p>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior
+        document.querySelector('form').addEventListener('submit', function() {
+            // Show loading state
+            const btn = document.querySelector('.btn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Processing...';
+        });
+
+        // Auto-scroll to results if they exist
+        window.addEventListener('load', function() {
+            const results = document.querySelector('.results');
+            if (results) {
+                results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    </script>
+</body>
+</html>
