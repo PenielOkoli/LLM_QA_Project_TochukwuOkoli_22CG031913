@@ -1,9 +1,4 @@
 Name: Tochukwu Okoli
 Matric Number: 22CG031913
-Live URL: [YOUR_DEPLOYED_APP_URL_HERE]
-GitHub Repository: [YOUR_GITHUB_REPO_URL_HERE]
-
-Instructions:
-1. Get free Google Gemini API key from https://aistudio.google.com/app/apikey
-2. After deploying to Streamlit Cloud, replace [YOUR_DEPLOYED_APP_URL_HERE] with the actual URL
-3. After uploading to GitHub, replace [YOUR_GITHUB_REPO_URL_HERE] with your repository URL
+Live URL: https://llm-chatbot-project-tochukwuokoli-22cg031913.streamlit.app
+GitHub Repository: https://github.com/PenielOkoli/LLM_QA_Project_TochukwuOkoli_22CG031913
