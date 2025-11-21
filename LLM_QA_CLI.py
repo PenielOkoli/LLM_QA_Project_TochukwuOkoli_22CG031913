@@ -35,7 +35,7 @@ def query_llm(question, api_key):
         prompt = f"Answer the following question concisely and accurately: {question}"
         
         # Create model
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-2.0-pro')
         
         # Make API call
         response = model.generate_content(prompt)
