@@ -24,29 +24,34 @@ def query_llm(question, api_key):
     Send question to Google Gemini LLM API and return the response
     """
     try:
-        # Configure API
         genai.configure(api_key=api_key)
         
-        # Use the most basic model call
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        prompt = f"Answer the following question concisely and accurately: {question}"
         
-        # Simple prompt
-        response = model.generate_content(question)
+        # Try different model names in order
+        model_names = [
+            'gemini-1.5-flash-latest',
+            'gemini-1.5-flash',
+            'gemini-1.5-pro',
+            'gemini-pro'
+        ]
         
-        return response.text
+        last_error = None
+        for model_name in model_names:
+            try:
+                model = genai.GenerativeModel(model_name)
+                response = model.generate_content(prompt)
+                return response.text
+            except Exception as e:
+                last_error = str(e)
+                continue
+        
+        return f"Error: Could not connect to any Gemini model. Last error: {last_error}"
         
     except Exception as e:
-        # Return detailed error for debugging
-        return f"API Error: {str(e)}\n\nPlease check:\n1. Your API key is correct\n2. You created the key at aistudio.google.com\n3. The key has no restrictions\n4. You waited 1-2 minutes after creating it"
-```
+        return f"Error querying LLM: {str(e)}"
 
----
-
-## **Quick Debug: Verify Your API Key Format**
-
-Your API key should look like this:
-```
-AIzaSyC1234567890abcdefghijklmnopqrstuvwxyz
+# ← IMPORTANT: Blank line after function definition
 # Page configuration
 st.set_page_config(
     page_title="LLM Q&A System",
@@ -101,6 +106,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### About")
     st.info("This application uses Google's Gemini AI to answer your questions. Get your free API key at [aistudio.google.com](https://aistudio.google.com/app/apikey)")
+
 # Main interface
 col1, col2 = st.columns([2, 1])
 
