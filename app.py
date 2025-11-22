@@ -26,7 +26,7 @@ def query_llm(question, api_key):
     try:
         genai.configure(api_key=api_key)
         
-        # Use the simplest model name without "models/" prefix
+        # Use the simplest model name
         model = genai.GenerativeModel('gemini-pro')
         
         response = model.generate_content(question)
@@ -40,7 +40,21 @@ def query_llm(question, api_key):
         if "404" in error_msg or "not found" in error_msg:
             return """⚠️ API Connection Error
 
-# ← IMPORTANT: Blank line after function definition
+Possible issues:
+1. **API Key Issue**: Your Gemini API key may be invalid or restricted
+   - Go to https://aistudio.google.com/app/apikey
+   - Delete your old key and create a NEW one
+   - Make sure to select "Create API key in new project"
+   - Don't add any restrictions
+
+2. **Library Version**: Try updating google-generativeai to version 0.8.3
+
+3. **Wait Time**: If you just created your API key, wait 2-3 minutes for it to activate
+
+Please create a fresh API key and update it in the sidebar or Streamlit secrets."""
+        
+        return f"Error: {error_msg}"
+
 # Page configuration
 st.set_page_config(
     page_title="LLM Q&A System",
