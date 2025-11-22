@@ -31,22 +31,30 @@ def query_llm(question, api_key):
     try:
         genai.configure(api_key=api_key)
         
-        # Construct prompt
         prompt = f"Answer the following question concisely and accurately: {question}"
         
-        # Create model
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Try different model names in order
+        model_names = [
+            'gemini-1.5-flash-latest',
+            'gemini-1.5-flash',
+            'gemini-1.5-pro',
+            'gemini-pro'
+        ]
         
-        # Make API call
-        response = model.generate_content(prompt)
+        last_error = None
+        for model_name in model_names:
+            try:
+                model = genai.GenerativeModel(model_name)
+                response = model.generate_content(prompt)
+                return response.text
+            except Exception as e:
+                last_error = str(e)
+                continue
         
-        # Extract answer
-        answer = response.text
-        return answer
+        return f"Error: Could not connect to any Gemini model. Last error: {last_error}"
         
     except Exception as e:
         return f"Error querying LLM: {str(e)}"
-
 def main():
     """
     Main CLI application loop
