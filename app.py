@@ -28,15 +28,28 @@ def query_llm(question, api_key):
         
         prompt = f"Answer the following question concisely and accurately: {question}"
         
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(prompt)
+        # Try different model names in order
+        model_names = [
+            'gemini-1.5-flash-latest',
+            'gemini-1.5-flash',
+            'gemini-1.5-pro',
+            'gemini-pro'
+        ]
         
-        answer = response.text
-        return answer
+        last_error = None
+        for model_name in model_names:
+            try:
+                model = genai.GenerativeModel(model_name)
+                response = model.generate_content(prompt)
+                return response.text
+            except Exception as e:
+                last_error = str(e)
+                continue
+        
+        return f"Error: Could not connect to any Gemini model. Last error: {last_error}"
         
     except Exception as e:
         return f"Error querying LLM: {str(e)}"
-
 # Page configuration
 st.set_page_config(
     page_title="LLM Q&A System",
