@@ -29,32 +29,29 @@ def query_llm(question, api_key):
     Send question to Google Gemini LLM API and return the response
     """
     try:
+        # Configure API
         genai.configure(api_key=api_key)
         
-        prompt = f"Answer the following question concisely and accurately: {question}"
+        # Use the most basic model call
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
-        # Try different model names in order
-        model_names = [
-            'gemini-1.5-flash-latest',
-            'gemini-1.5-flash',
-            'gemini-1.5-pro',
-            'gemini-pro'
-        ]
+        # Simple prompt
+        response = model.generate_content(question)
         
-        last_error = None
-        for model_name in model_names:
-            try:
-                model = genai.GenerativeModel(model_name)
-                response = model.generate_content(prompt)
-                return response.text
-            except Exception as e:
-                last_error = str(e)
-                continue
-        
-        return f"Error: Could not connect to any Gemini model. Last error: {last_error}"
+        return response.text
         
     except Exception as e:
-        return f"Error querying LLM: {str(e)}"
+        # Return detailed error for debugging
+        return f"API Error: {str(e)}\n\nPlease check:\n1. Your API key is correct\n2. You created the key at aistudio.google.com\n3. The key has no restrictions\n4. You waited 1-2 minutes after creating it"
+```
+
+---
+
+## **Quick Debug: Verify Your API Key Format**
+
+Your API key should look like this:
+```
+AIzaSyC1234567890abcdefghijklmnopqrstuvwxyz"
 def main():
     """
     Main CLI application loop
