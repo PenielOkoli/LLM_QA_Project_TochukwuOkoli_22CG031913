@@ -26,30 +26,19 @@ def query_llm(question, api_key):
     try:
         genai.configure(api_key=api_key)
         
-        prompt = f"Answer the following question concisely and accurately: {question}"
+        # Use the simplest model name without "models/" prefix
+        model = genai.GenerativeModel('gemini-pro')
         
-        # Try different model names in order
-        model_names = [
-            'gemini-1.5-flash-latest',
-            'gemini-1.5-flash',
-            'gemini-1.5-pro',
-            'gemini-pro'
-        ]
+        response = model.generate_content(question)
         
-        last_error = None
-        for model_name in model_names:
-            try:
-                model = genai.GenerativeModel(model_name)
-                response = model.generate_content(prompt)
-                return response.text
-            except Exception as e:
-                last_error = str(e)
-                continue
-        
-        return f"Error: Could not connect to any Gemini model. Last error: {last_error}"
+        return response.text
         
     except Exception as e:
-        return f"Error querying LLM: {str(e)}"
+        error_msg = str(e)
+        
+        # Provide helpful error message
+        if "404" in error_msg or "not found" in error_msg:
+            return """⚠️ API Connection Error
 
 # ← IMPORTANT: Blank line after function definition
 # Page configuration
