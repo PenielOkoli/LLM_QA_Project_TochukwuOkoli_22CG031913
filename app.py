@@ -71,11 +71,26 @@ st.markdown('<p class="sub-header">By: Tochukwu Okoli (22CG031913)</p>', unsafe_
 # Sidebar for API key
 with st.sidebar:
     st.header("⚙️ Configuration")
-    api_key = st.text_input("Enter Google Gemini API Key:", type="password", value=os.getenv("GEMINI_API_KEY", ""))
+    
+    # Try to get API key from environment (Streamlit Secrets)
+    env_api_key = os.getenv("GEMINI_API_KEY", "")
+    
+    if env_api_key:
+        # Key exists in secrets - use it and inform user
+        api_key = env_api_key
+        st.success("✅ Using API key from secure storage")
+        st.info("API key is securely loaded and hidden")
+    else:
+        # No key in secrets - ask user to input
+        api_key = st.text_input(
+            "Enter Google Gemini API Key:", 
+            type="password",
+            help="Your API key is not saved and only used for this session"
+        )
+    
     st.markdown("---")
     st.markdown("### About")
     st.info("This application uses Google's Gemini AI to answer your questions. Get your free API key at [aistudio.google.com](https://aistudio.google.com/app/apikey)")
-
 # Main interface
 col1, col2 = st.columns([2, 1])
 
