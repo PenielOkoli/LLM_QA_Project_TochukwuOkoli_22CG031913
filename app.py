@@ -28,7 +28,7 @@ def query_llm(question, api_key):
         
         prompt = f"Answer the following question concisely and accurately: {question}"
         
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
         
         answer = response.text
